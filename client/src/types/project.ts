@@ -16,10 +16,18 @@ export interface SareeProject {
   pallu: DesignRegion;
   blouse: DesignRegion;
 
+  regions?: {
+    body: DesignRegion;
+    border: DesignRegion;
+    pallu: DesignRegion;
+    blouse: DesignRegion;
+  };
+
   palette: ColorEntry[];
   motifs: string[]; // motif IDs
 
   grid: GridData | null;
+  currentGrid?: GridData | null;
 
   versions: DesignVersion[];
   currentVersionIndex: number;
@@ -56,28 +64,42 @@ export interface DesignRegion {
 export interface GridData {
   width: number;
   height: number;
-  data: number[];    // flattened Uint8Array values (serializable)
-  threshold: number;
+  data: number[] | Uint8Array;    // serializable numbers or Uint8Array
+  threshold?: number;
+  stats?: {
+    totalHooks: number;
+    totalPicks: number;
+    density: number;
+    colorCounts?: { ground: number; float: number };
+  };
 }
 
 export interface DesignVersion {
   id: string;
-  number: number;
-  name: string;
-  timestamp: string;
+  number?: number;
+  name?: string;
+  description?: string;
+  timestamp?: string;
+  createdAt?: string;
   thumbnail?: string;    // base64
   body?: string;         // base64 snapshot
   border?: string;
   pallu?: string;
   blouse?: string;
   compositeImage?: string;
+  regions?: {
+    body: DesignRegion;
+    border: DesignRegion;
+    pallu: DesignRegion;
+    blouse: DesignRegion;
+  };
 }
 
 export interface ColorEntry {
   id: string;
   name: string;
   hex: string;
-  role: 'primary' | 'secondary' | 'accent' | 'background' | 'custom';
+  role: 'primary' | 'secondary' | 'accent' | 'background' | 'custom' | 'zari';
 }
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
@@ -87,13 +109,13 @@ export type PatternType =
   | 'butta' | 'checks' | 'stripes' | 'peacock' | 'lotus'
   | 'mango' | 'leaves' | 'traditional' | 'contemporary' | 'custom';
 
-export type SymmetryType = 'none' | 'horizontal' | 'vertical' | 'radial' | 'mirror';
+export type SymmetryType = 'none' | 'horizontal' | 'vertical' | 'radial' | 'mirror' | 'dual' | 'rotational';
 
-export type RepeatType = 'none' | 'tile' | 'mirror' | 'halfDrop' | 'brick' | 'radial';
+export type RepeatType = 'none' | 'tile' | 'mirror' | 'halfDrop' | 'halfdrop' | 'brick' | 'radial';
 
 export type SareeRegion = 'body' | 'border' | 'pallu' | 'blouse';
 
-export type ViewMode = 'design' | 'technical' | 'realistic';
+export type ViewMode = 'design' | 'technical' | 'realistic' | 'color' | 'monochrome' | 'grid' | 'contrast';
 
 export type GridViewMode = 'fullColor' | 'monochrome' | 'grid' | 'highContrast' | 'technical';
 
