@@ -71,7 +71,7 @@ export interface GeneratedDesignSpec {
   };
 }
 
-const GROQ_API_KEY = process.env.GROQ_API_KEY || 'REDACTED_API_KEY';
+const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
 
 export class GroqProvider {
