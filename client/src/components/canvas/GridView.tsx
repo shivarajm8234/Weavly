@@ -21,12 +21,13 @@ export const GridView: React.FC<GridViewProps> = ({ width, height }) => {
   // Redraw grid whenever project.currentGrid or viewMode changes
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !project?.currentGrid) return;
+    const grid = project?.currentGrid || project?.grid;
+    if (!canvas || !grid) return;
 
     canvas.width = width;
     canvas.height = height;
-    GridEngine.renderGridToCanvas(canvas, project.currentGrid, viewMode, showGrid);
-  }, [project?.currentGrid, viewMode, showGrid, width, height]);
+    GridEngine.renderGridToCanvas(canvas, grid, viewMode as any, showGrid);
+  }, [project?.currentGrid, project?.grid, viewMode, showGrid, width, height]);
 
   // Handle canvas mouse move for cell inspection
   const handleMouseMove = useCallback(

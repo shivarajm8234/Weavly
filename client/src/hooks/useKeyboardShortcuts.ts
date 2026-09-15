@@ -35,7 +35,7 @@ export function useKeyboardShortcuts() {
         if (canUndo()) {
           const prev = undo();
           if (prev) {
-            useProjectStore.getState().loadProject(prev);
+            useProjectStore.getState().updateProject(prev);
             addToast({ type: 'info', message: 'Undo' });
           }
         }
@@ -47,7 +47,7 @@ export function useKeyboardShortcuts() {
         if (canRedo()) {
           const next = redo();
           if (next) {
-            useProjectStore.getState().loadProject(next);
+            useProjectStore.getState().updateProject(next);
             addToast({ type: 'info', message: 'Redo' });
           }
         }

@@ -62,7 +62,7 @@ generateRoutes.post('/:id/generate', async (req, res) => {
       palluPrompt: project.regions.pallu.prompt,
       borderPrompt: project.regions.border.prompt,
       blousePrompt: project.regions.blouse.prompt,
-      paletteColors: project.palette.map((p) => p.hex),
+      paletteColors: (project.palette || []).map((p: any) => p.hex),
     });
 
     // Update project with AI recommendations
@@ -165,7 +165,7 @@ generateRoutes.post('/:id/generate/:region', async (req, res) => {
       palluPrompt: project.regions.pallu.prompt,
       borderPrompt: project.regions.border.prompt,
       blousePrompt: project.regions.blouse.prompt,
-      paletteColors: project.palette.map((p) => p.hex),
+      paletteColors: (project.palette || []).map((p: any) => p.hex),
     });
 
     const regSpec = generated.regions[region as keyof typeof generated.regions];

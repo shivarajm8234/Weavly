@@ -42,10 +42,10 @@ export const DesignCanvas: React.FC = () => {
       console.warn('Could not generate Jacquard grid:', e);
     }
   }, [
-    project?.regions.body,
-    project?.regions.border,
-    project?.regions.pallu,
-    project?.regions.blouse,
+    project?.body,
+    project?.border,
+    project?.pallu,
+    project?.blouse,
     project?.palette,
     project?.jacquard,
     updateGrid,
@@ -164,11 +164,11 @@ export const DesignCanvas: React.FC = () => {
         <span>{project.name}</span>
         <span>•</span>
         <span>Grid: {project.jacquard.hookWidth} × {project.jacquard.hookHeight}</span>
-        {project.currentGrid && (
+        {(project.currentGrid || project.grid)?.stats && (
           <>
             <span>•</span>
             <span className="text-[var(--color-gold)] font-medium">
-              Weft Float: {project.currentGrid.stats.density}%
+              Weft Float: {(project.currentGrid || project.grid)?.stats?.density}%
             </span>
           </>
         )}

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
-import { api } from '../../utils/api';
 
 const PROMPT_PRESETS = [
   {
@@ -34,10 +33,10 @@ export const GenerationPanel: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [model, setModel] = useState<'groq-gpt' | 'local'>('groq-gpt');
-  const [bodyPrompt, setBodyPrompt] = useState(project?.regions.body.prompt || '');
-  const [palluPrompt, setPalluPrompt] = useState(project?.regions.pallu.prompt || '');
-  const [borderPrompt, setBorderPrompt] = useState(project?.regions.border.prompt || '');
-  const [blousePrompt, setBlousePrompt] = useState(project?.regions.blouse.prompt || '');
+  const [bodyPrompt, setBodyPrompt] = useState(project?.body?.prompt || project?.regions?.body?.prompt || '');
+  const [palluPrompt, setPalluPrompt] = useState(project?.pallu?.prompt || project?.regions?.pallu?.prompt || '');
+  const [borderPrompt, setBorderPrompt] = useState(project?.border?.prompt || project?.regions?.border?.prompt || '');
+  const [blousePrompt, setBlousePrompt] = useState(project?.blouse?.prompt || project?.regions?.blouse?.prompt || '');
   const [aiNotes, setAiNotes] = useState<string | null>(null);
 
   if (!project) {

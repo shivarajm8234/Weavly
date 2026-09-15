@@ -1,6 +1,7 @@
 import React from 'react';
 import { useProjectStore } from '../../stores/projectStore';
-import { useUIStore, type ViewMode } from '../../stores/uiStore';
+import { useUIStore } from '../../stores/uiStore';
+import type { ViewMode } from '../../types/project';
 
 export const GridControls: React.FC = () => {
   const project = useProjectStore((s) => s.project);
@@ -15,22 +16,26 @@ export const GridControls: React.FC = () => {
 
   if (!project) return null;
 
-  const stats = project.currentGrid?.stats;
+  const currentGrid = project.currentGrid || project.grid;
+  const stats = currentGrid?.stats;
   const totalCells = project.jacquard.hookWidth * project.jacquard.hookHeight;
 
   // Invert warp lift states (1 <-> 0)
   const handleInvertGrid = () => {
-    if (!project.currentGrid) return;
-    const newData = new Uint8Array(project.currentGrid.data.length);
-    for (let i = 0; i < project.currentGrid.data.length; i++) {
-      newData[i] = project.currentGrid.data[i] === 1 ? 0 : 1;
+    if (!currentGrid) return;
+    const currentData = currentGrid.data as unknown as ArrayLike<number>;
+    const newData = new Uint8Array(currentData.length);
+    for (let i = 0; i < currentData.length; i++) {
+      newData[i] = currentData[i] === 1 ? 0 : 1;
     }
+    const currentDensity = stats?.density ?? 50;
     updateGrid({
-      ...project.currentGrid,
+      ...currentGrid,
       data: newData,
       stats: {
-        ...project.currentGrid.stats,
-        density: 100 - project.currentGrid.stats.density,
+        totalHooks: project.jacquard.hookWidth,
+        totalPicks: project.jacquard.hookHeight,
+        density: 100 - currentDensity,
       },
     });
     addToast({ type: 'info', message: 'Inverted Jacquard warp lift states' });

@@ -74,7 +74,7 @@ export const VersionHistory: React.FC = () => {
                       {ver.description || `Checkpoint ${project.versions.length - idx}`}
                     </div>
                     <div className="text-[10px] text-[var(--color-text-muted)]">
-                      {new Date(ver.createdAt).toLocaleString()}
+                      {new Date(ver.createdAt || ver.timestamp || Date.now()).toLocaleString()}
                     </div>
                   </div>
                   <button
@@ -86,9 +86,9 @@ export const VersionHistory: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-1.5 text-[10px] text-[var(--color-text-muted)] font-mono">
-                  <span>Body: {ver.regions.body.pattern}</span>
+                  <span>Body: {ver.regions?.body?.pattern || 'pattern'}</span>
                   <span>•</span>
-                  <span>Pallu: {ver.regions.pallu.pattern}</span>
+                  <span>Pallu: {ver.regions?.pallu?.pattern || 'pattern'}</span>
                 </div>
               </div>
             ))}

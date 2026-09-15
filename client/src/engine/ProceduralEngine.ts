@@ -40,7 +40,7 @@ export class ProceduralEngine {
     const primaryColor = palette.find((c) => c.role === 'primary')?.hex || '#701020';
     const secondaryColor = palette.find((c) => c.role === 'secondary')?.hex || '#D4AF37';
     const accentColor = palette.find((c) => c.role === 'accent')?.hex || '#F5E6B3';
-    const zariColor = palette.find((c) => c.role === 'zari')?.hex || '#E6C229';
+    const zariColor = palette.find((c) => (c.role as string) === 'zari')?.hex || secondaryColor || '#E6C229';
 
     // Different base tone for pallu / border vs body
     if (regionKey === 'border') {
@@ -100,7 +100,7 @@ export class ProceduralEngine {
     );
 
     // 5. Draw motifs
-    const path = getOrCreatePath(motif.pathData);
+    const path = getOrCreatePath(motif.pathData || motif.svgPath || '');
     const motifColor = regionKey === 'border' || regionKey === 'pallu' ? zariColor : accentColor;
 
     layoutItems.forEach((item) => {
@@ -158,28 +158,31 @@ export class ProceduralEngine {
 
     ctx.clearRect(0, 0, w, h);
 
-    const { jacquard, regions, palette } = project;
+    const { jacquard, palette } = project;
+    const body = project.body || project.regions?.body || { prompt: '', pattern: 'floral', motifIds: [], density: 50, scale: 1, rotation: 0, symmetry: 'vertical', repeatType: 'tile', colors: [] };
+    const border = project.border || project.regions?.border || { prompt: '', pattern: 'temple', motifIds: [], density: 60, scale: 0.9, rotation: 0, symmetry: 'horizontal', repeatType: 'tile', colors: [] };
+    const pallu = project.pallu || project.regions?.pallu || { prompt: '', pattern: 'peacock', motifIds: [], density: 75, scale: 1.4, rotation: 0, symmetry: 'dual', repeatType: 'radial', colors: [] };
+
     // Calculate proportions
-    // Standard saree layout: Top border, Body with bottom border, Pallu at the right end, Blouse preview section
     const borderH = Math.max(20, Math.round(h * (jacquard.borderWidth / jacquard.gridHeight)));
     const palluW = Math.max(60, Math.round(w * (jacquard.palluLength / jacquard.gridWidth)));
     const bodyW = w - palluW;
     const bodyH = h - borderH * 2;
 
     // 1. Body Field
-    this.renderRegion(ctx, 'body', regions.body, 0, borderH, bodyW, bodyH, palette);
+    this.renderRegion(ctx, 'body', body, 0, borderH, bodyW, bodyH, palette);
 
     // 2. Top Border
-    this.renderRegion(ctx, 'border', regions.border, 0, 0, w, borderH, palette);
+    this.renderRegion(ctx, 'border', border, 0, 0, w, borderH, palette);
 
     // 3. Bottom Border
-    this.renderRegion(ctx, 'border', regions.border, 0, h - borderH, w, borderH, palette);
+    this.renderRegion(ctx, 'border', border, 0, h - borderH, w, borderH, palette);
 
     // 4. Pallu (Grand End Piece)
-    this.renderRegion(ctx, 'pallu', regions.pallu, bodyW, borderH, palluW, bodyH, palette);
+    this.renderRegion(ctx, 'pallu', pallu, bodyW, borderH, palluW, bodyH, palette);
 
     // 5. Border separator accent lines
-    ctx.fillStyle = palette.find((c) => c.role === 'zari')?.hex || '#D4AF37';
+    ctx.fillStyle = palette.find((c) => (c.role as string) === 'zari')?.hex || '#D4AF37';
     ctx.fillRect(0, borderH - 1, w, 2);
     ctx.fillRect(0, h - borderH - 1, w, 2);
     ctx.fillRect(bodyW - 1, borderH, 2, bodyH);

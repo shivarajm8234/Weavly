@@ -6,7 +6,7 @@ export function useAutosave(debounceMs = 2500) {
   const project = useProjectStore((s) => s.project);
   const isDirty = useProjectStore((s) => s.isDirty);
   const markClean = useProjectStore((s) => s.markClean);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!project || !isDirty) return;

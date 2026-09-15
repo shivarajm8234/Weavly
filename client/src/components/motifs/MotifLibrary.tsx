@@ -24,7 +24,7 @@ export const MotifLibrary: React.FC = () => {
     const matchesCategory = selectedCategory === 'all' || m.category === selectedCategory;
     const matchesSearch =
       m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      (m.tags || []).some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 
@@ -88,7 +88,7 @@ export const MotifLibrary: React.FC = () => {
         {filteredMotifs.map((motif) => {
           const isAssigned =
             selectedRegion &&
-            project?.regions[selectedRegion]?.motifIds?.includes(motif.id);
+            ((project?.[selectedRegion]?.motifIds || project?.regions?.[selectedRegion]?.motifIds || []).includes(motif.id));
 
           return (
             <div

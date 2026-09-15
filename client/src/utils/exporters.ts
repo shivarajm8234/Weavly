@@ -30,14 +30,14 @@ export class Exporters {
    * Export SVG representation of the saree
    */
   static exportSVG(project: SareeProject, width = 1200, height = 600) {
-    const { jacquard, regions, palette } = project;
+    const { jacquard, palette } = project;
     const borderH = Math.max(20, Math.round(height * (jacquard.borderWidth / jacquard.gridHeight)));
     const palluW = Math.max(60, Math.round(width * (jacquard.palluLength / jacquard.gridWidth)));
     const bodyW = width - palluW;
     const bodyH = height - borderH * 2;
 
     const primaryHex = palette.find((c) => c.role === 'primary')?.hex || '#800020';
-    const zariHex = palette.find((c) => c.role === 'zari')?.hex || '#D4AF37';
+    const zariHex = palette.find((c) => (c.role as string) === 'zari')?.hex || '#D4AF37';
 
     const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
@@ -90,18 +90,20 @@ export class Exporters {
    * Export Jacquard Loom punch card binary grid as CSV (hook x pick matrix)
    */
   static exportCSV(project: SareeProject) {
-    if (!project.currentGrid) return;
-    const { width, height, data } = project.currentGrid;
+    const grid = project.grid || project.currentGrid;
+    if (!grid) return;
+    const { width, height, data } = grid;
 
     const rows: string[] = [];
     // Header with hook numbers
     const header = Array.from({ length: width }, (_, i) => `Hook_${i + 1}`).join(',');
     rows.push(`Pick_Number,${header}`);
 
+    const arr = data as unknown as ArrayLike<number>;
     for (let y = 0; y < height; y++) {
       const rowVals: number[] = [];
       for (let x = 0; x < width; x++) {
-        rowVals.push(data[y * width + x]);
+        rowVals.push(arr[y * width + x]);
       }
       rows.push(`${y + 1},${rowVals.join(',')}`);
     }

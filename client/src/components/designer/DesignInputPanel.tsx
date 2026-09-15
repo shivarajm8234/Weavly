@@ -10,7 +10,7 @@ const STYLES: { id: DesignStyle; label: string }[] = [
   { id: 'geometric', label: 'Geometric' },
   { id: 'floral', label: 'Floral' },
   { id: 'minimal', label: 'Minimalist' },
-  { id: 'fusion', label: 'Heritage Fusion' },
+  { id: 'royal', label: 'Royal Heritage' },
 ];
 
 export const DesignInputPanel: React.FC = () => {
@@ -28,10 +28,10 @@ export const DesignInputPanel: React.FC = () => {
   }
 
   const regions: { id: SareeRegion; label: string; icon: string; count: number }[] = [
-    { id: 'body', label: 'Saree Body', icon: '🥻', count: project.regions.body.motifIds.length },
-    { id: 'border', label: 'Border', icon: '🏛️', count: project.regions.border.motifIds.length },
-    { id: 'pallu', label: 'Grand Pallu', icon: '🦚', count: project.regions.pallu.motifIds.length },
-    { id: 'blouse', label: 'Blouse Piece', icon: '✂️', count: project.regions.blouse.motifIds.length },
+    { id: 'body', label: 'Saree Body', icon: '🥻', count: (project.body?.motifIds || project.regions?.body?.motifIds || []).length },
+    { id: 'border', label: 'Border', icon: '🏛️', count: (project.border?.motifIds || project.regions?.border?.motifIds || []).length },
+    { id: 'pallu', label: 'Grand Pallu', icon: '🦚', count: (project.pallu?.motifIds || project.regions?.pallu?.motifIds || []).length },
+    { id: 'blouse', label: 'Blouse Piece', icon: '✂️', count: (project.blouse?.motifIds || project.regions?.blouse?.motifIds || []).length },
   ];
 
   return (
@@ -166,7 +166,7 @@ export const DesignInputPanel: React.FC = () => {
               <div>
                 <div className="text-xs font-medium leading-tight">{r.label}</div>
                 <div className="text-[10px] opacity-70">
-                  {project.regions[r.id].pattern} • {project.regions[r.id].repeatType}
+                  {(project[r.id] || project.regions?.[r.id])?.pattern} • {(project[r.id] || project.regions?.[r.id])?.repeatType}
                 </div>
               </div>
             </button>

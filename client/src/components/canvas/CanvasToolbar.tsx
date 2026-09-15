@@ -1,6 +1,7 @@
 import React from 'react';
-import { useUIStore, type ViewMode } from '../../stores/uiStore';
+import { useUIStore } from '../../stores/uiStore';
 import { useProjectStore } from '../../stores/projectStore';
+import type { ViewMode } from '../../types/project';
 
 export const CanvasToolbar: React.FC = () => {
   const {

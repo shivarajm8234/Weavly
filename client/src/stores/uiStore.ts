@@ -29,6 +29,10 @@ interface UIStore {
   snapToGrid: boolean;
   canvasTool: CanvasTool;
 
+  zoomIn: () => void;
+  zoomOut: () => void;
+  resetZoom: () => void;
+  toggleGrid: () => void;
   setZoom: (zoom: number) => void;
   setPan: (x: number, y: number) => void;
   setShowGrid: (show: boolean) => void;
@@ -99,6 +103,10 @@ export const useUIStore = create<UIStore>((set, get) => ({
   snapToGrid: true,
   canvasTool: 'select',
 
+  zoomIn: () => set({ zoom: Math.min(10, get().zoom + 0.1) }),
+  zoomOut: () => set({ zoom: Math.max(0.1, get().zoom - 0.1) }),
+  resetZoom: () => set({ zoom: 1, panX: 0, panY: 0 }),
+  toggleGrid: () => set({ showGrid: !get().showGrid }),
   setZoom: (zoom) => set({ zoom: Math.max(0.1, Math.min(10, zoom)) }),
   setPan: (panX, panY) => set({ panX, panY }),
   setShowGrid: (showGrid) => set({ showGrid }),
